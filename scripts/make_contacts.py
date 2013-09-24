@@ -60,7 +60,7 @@ if __name__ == '__main__':
                         default=1, 
                         help='Number of simultaneous processes to launch in each round. [default: 1]')
     parser.add_option('-e', '--exec', dest="executable", action='store', type='string',
-                        default='%s../src/contact_inter' %os.path.dirname(sys.argv[0]), 
+                        default='%s/../src/contact_inter' %os.path.dirname(sys.argv[0]), 
                         help='Path to the executable C++ program to calculate contacts [default: ../fcc/src/contact_inter]')
     parser.add_option('-s', '--selection', dest="selection", action='store', type='string',
                         default=None, 
