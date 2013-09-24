@@ -7,7 +7,10 @@ About FCC
 ---------
 
 Structure prediction methods generate a large number of models of which only a fraction matches the biologically relevant structure. To identify this (near-)native model, we often employ clustering 
-algorithms, based on the assumption that, in the energy landscape of every biomolecule, its native state lies in a wide basin neighboring other structurally similar states. RMSD-based clustering, the current method of choice, is inadequate for large multi-molecular complexes, particularly when their components are symmetric. We developed a novel clustering strategy that is based on a very efficient similarity measure - the fraction of common contacts. The outcome of this calculation is a number between 0 and 1, which corresponds to the fraction of residue pairs that are present in both the reference and the mobile complex.
+algorithms, based on the assumption that, in the energy landscape of every biomolecule, its native state lies in a wide basin neighboring other structurally similar states. RMSD-based clustering, the 
+current method of choice, is inadequate for large multi-molecular complexes, particularly when their components are symmetric. We developed a novel clustering strategy that is based on a very 
+efficient similarity measure - the fraction of common contacts. The outcome of this calculation is a number between 0 and 1, which corresponds to the fraction of residue pairs that are present in 
+both the reference and the mobile complex.
 
 Advantages of FCC clustering vs. RMSD-based clustering:
 * 100-times faster on average.
@@ -19,7 +22,7 @@ Advantages of FCC clustering vs. RMSD-based clustering:
 How to Cite
 -----------
 Rodrigues JPGLM, Trellet M, Schmitz C, Kastritis P, Karaca E, Melquiond ASJ, Bonvin AMJJ. 
-Clustering biomolecular complexes by residue contacts similarity. 
+[Clustering biomolecular complexes by residue contacts similarity.] [1]
 Proteins: Structure, Function, and Bioinformatics 2012;80(7):1810–1817.
 
 Requirements
@@ -78,6 +81,7 @@ Adrien Melquiond
 Christophe Schmitz
 Ezgi Karaca
 Panagiotis Kastritis
-[Alexandre Bonvin] [1]
+[Alexandre Bonvin] [2]
 
-[1]: http://nmr.chem.uu.nl/~abonvin "Alexandre Bonvin's Homepage"
+[1]: http://www.ncbi.nlm.nih.gov/pubmed/22489062 "FCC @ Pubmed"
+[2]: http://nmr.chem.uu.nl/~abonvin "Alexandre Bonvin's Homepage"
