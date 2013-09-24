@@ -4,7 +4,10 @@
 """
 Asymmetric Taylor-Butina Disjoint Clustering Algorithm.
 
-João Rodrigues @ Utrecht, 2011
+Authors:
+           RODRIGUES Joao
+           TRELLET Mikael
+           MELQUIOND Adrien
 """
 
 class Element:

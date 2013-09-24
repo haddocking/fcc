@@ -1,15 +1,14 @@
-#!/usr/bin/env python2.5
+#!/usr/bin/env python
+# -*- coding: UTF-8  -*-
 
-#############################################
-#   Authors:TRELLET Mikael                  #
-#           RODRIGUES Joao                  #
-#           MELQUIOND Adrien                #
-#                                           #
-#   Created:        February    2011        #
-#   Last Updated:   May         2012        #
-#############################################
+"""
+Calculates a matrix of fraction of common contacts between two or more structures.
 
-"""Calculates a matrix of fraction of common contacts between two or more structures."""
+Authors:
+        RODRIGUES Joao
+        TRELLET Mikael
+        MELQUIOND Adrien
+"""
 
 # Contact Parsing routines
 def parse_contact_file(f_list, ignore_chain):

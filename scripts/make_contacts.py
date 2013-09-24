@@ -5,7 +5,10 @@
 Script to calculate contact lists on PDB files.
 Requires external executable to calculate the contacts!
 
-João Rodrigues @ Utrecht, 2011
+Authors:
+           RODRIGUES Joao
+           TRELLET Mikael
+           MELQUIOND Adrien
 """
 
 from multiprocessing import Process
@@ -57,8 +60,8 @@ if __name__ == '__main__':
                         default=1, 
                         help='Number of simultaneous processes to launch in each round. [default: 1]')
     parser.add_option('-e', '--exec', dest="executable", action='store', type='string',
-                        default='/home/joao/scriptorium/fcc_clustering/contact_inter', 
-                        help='Path to the executable C++ program to calculate contacts [default: /home/joao/scriptorium/fcc_clustering/contact_inter]')
+                        default='%s../src/contact_inter' %os.path.dirname(sys.argv[0]), 
+                        help='Path to the executable C++ program to calculate contacts [default: ../fcc/src/contact_inter]')
     parser.add_option('-s', '--selection', dest="selection", action='store', type='string',
                         default=None, 
                         help='Filter contacts based on their segids. [Default: No filtering. All chains] [Example: A,C]')
@@ -81,10 +84,10 @@ if __name__ == '__main__':
 
     executable = options.executable
     if not os.path.exists(executable):
-        print "Path not found: %s" %executable
+        print "Path not found: %s" %os.path.abspath(executable)
         sys.exit(1)
     executable = os.path.abspath(executable)
-    
+
     if options.selection:
         filter_selection = set(options.selection.split(','))
         representative = open(args[0])
