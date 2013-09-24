@@ -58,7 +58,10 @@ int main(int argc, char *argv[]) {
     char atom[5];
     if (!fgets(buf, 2000, fil)) break;
     sscanf(buf, "%s %*d %s", code, atom);
-    if (!strncmp(code,"ATOM", 4) && atom[0] != 'H') {
+    //LINE CHANGED BY K.Visscher
+    //now test for both old and new style hydrogen
+    //translation: only read if record == "ATOM" and if either the first letter in the atomname is NOT H or if not ( the first letter is a number and the second letter is H )
+    if (!strncmp(code,"ATOM", 4) && ( atom[0] != 'H' && !(  isdigit(atom[0]) && atom[1] == 'H' )  )  ) {
       int nr = atoi(buf + 22);
       char seg = buf[72];
       if (nr != currnr) {

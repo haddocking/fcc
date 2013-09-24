@@ -58,7 +58,8 @@ int main(int argc, char *argv[]) {
     char atom[5];
     if (!fgets(buf, 2000, fil)) break;
     sscanf(buf, "%s %*d %s", code, atom);
-    if (!strncmp(code,"ATOM", 4) && atom[0] != 'H') {
+    //LINE CHANGED BY K.Visscher
+    if (!strncmp(code,"ATOM", 4) && ( atom[0] != 'H' && !(  isdigit(atom[0]) && atom[1] == 'H' )  )  ) {
       int nr = atoi(buf + 22);
       char seg = buf[72];
       if (nr != currnr) {
