@@ -76,11 +76,17 @@ Authors
 ------
 
 João Rodrigues
+
 Mikael Trellet
+
 Adrien Melquiond
+
 Christophe Schmitz
+
 Ezgi Karaca
+
 Panagiotis Kastritis
+
 [Alexandre Bonvin] [2]
 
 [1]: http://www.ncbi.nlm.nih.gov/pubmed/22489062 "FCC @ Pubmed"
