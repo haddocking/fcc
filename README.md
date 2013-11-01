@@ -61,8 +61,8 @@ Detailed Instructions
 ---------------------
 
 1. Make contact list for the proteins to be clustered using the appropriate script ( -e option of make_contacts.py ):
-* contact_inter calculates intermolecular residue-residue contacts (default).
-* contact_inter_lig calculates intermolecular contacts between protein residues and ligand atoms (more sensitive than residue-residue). Expects ligand in chain B.
+* contact_fcc calculates intermolecular residue-residue contacts (default).
+* contact_fcc_lig calculates intermolecular contacts between protein residues and ligand atoms (more sensitive than residue-residue). Expects ligand in chain B.
 
 Use make_contacts.py. It might be faster for a lot of contacts with the -n option, number of cores, set to 2 or more.
 
