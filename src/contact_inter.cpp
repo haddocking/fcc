@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
   }
   int currnr = -99999;
   char currseg;
-  int segid = 0;
+  int segid;
     
   set<int> nonconv;
   while (!feof(fil)) {
@@ -66,10 +66,7 @@ int main(int argc, char *argv[]) {
       if (nr != currnr) {
           Residue r;
           r.nr = nr+10000;
-        if (seg != currseg) { // Update SegID
-            currseg = seg;
-            segid++;
-        }   
+          segid = seg - 64; // Use ASCII index for numerical chain ID
     	  r.seg = segid;
   	    res.push_back(r);
   	    currnr = r.nr;
