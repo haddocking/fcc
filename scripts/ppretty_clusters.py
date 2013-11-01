@@ -11,7 +11,7 @@ Authors:
 import os
 import sys
 
-USAGE = "python %s <cluster_x.out> <file.list>" %os.path.basename(sys.argv[0])
+USAGE = "python %s <cluster_x.out> <file.nam>" %os.path.basename(sys.argv[0])
 
 def read_clusters(path):
     """
