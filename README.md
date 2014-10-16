@@ -34,11 +34,24 @@ Requirements
 Installation
 ------------
 
-Navigate to the src/ folder and issue 'make' to compile the atomic contact programs.
-Edit the Makefile if necessary.
+Navigate to the src/ folder and issue 'make' to compile the contact programs.
+Edit the Makefile if necessary (e.g. different compiler, optimization level).
 
-Quick and Dirty Example
------------------------
+Usage
+------------
+
+All scripts produce usage documentation if called without any arguments. Further,
+the '-h' option produces (for Python scripts) a more detailed help with descriptions
+of all available options.
+
+For most cases, the following setup is enough:
+
+    # Make a file list with all your PDB files
+    ls *pdb > pdb.list
+    
+    # Ensure all PDB models have segID identifiers
+    # Convert chainIDs to segIDs if necessary using scripts/pdb_chainxseg.py
+    for pdb in $( cat pdb.list ); do pdb_chainxseg.py $pdb > temp; mv temp $pdb; done
 
     # Generate contact files for all PDB files in pdb.list
     # using 4 cores on this machine.
@@ -56,21 +69,6 @@ Quick and Dirty Example
 
     # Use ppretty_clusters.py to output meaningful names instead of model indexes
     python2.6 ppretty_clusters.py clusters_0.75.out pdb.list
-
-Detailed Instructions
----------------------
-
-1. Make contact list for the proteins to be clustered using the appropriate script ( -e option of make_contacts.py ):
-* contact_fcc calculates intermolecular residue-residue contacts (default).
-* contact_fcc_lig calculates intermolecular contacts between protein residues and ligand atoms (more sensitive than residue-residue). Expects ligand in chain B.
-
-Use make_contacts.py. It might be faster for a lot of contacts with the -n option, number of cores, set to 2 or more.
-
-2. Make fcc matrix using calc_fcc_matrix.py: ./calc_fcc_matrix.py -o fcc_matrix.out <contact files> (or for example, `sed 's/pdb/contacts/' pdb.list`)
-
-!!! For symmetrical complexes use the -i option in the matrix calculation.
-
-3. Run cluster_fcc.py: ./cluster_fcc.py <fcc_matrix> <cutoff> -o cluster_fcc.out
 
 Authors
 ------
