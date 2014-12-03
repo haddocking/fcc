@@ -10,7 +10,7 @@ Authors:
            MELQUIOND Adrien
 """
 
-class Element:
+class Element(object):
     """Defines a 'clusterable' Element"""
 
     def __init__(self, name):
@@ -28,7 +28,7 @@ class Element:
         """Assigns the Element to Cluster. 0 if unclustered"""
         self.cluster = clust_id
 
-class Cluster:
+class Cluster(object):
     """Defines a Cluster. A Cluster is created with a name and a center (Element class)"""
 
     def __init__(self, name, center):
@@ -170,7 +170,7 @@ def find_false_singletons(element_pool, true_singletons):
 
     return fs_list
 
-def output_clusters(handle, cluster_list):
+def output_clusters(handle):
     """Outputs the cluster name, center, and members."""
 
     write = handle.write

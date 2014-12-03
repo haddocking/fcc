@@ -77,7 +77,6 @@ def calculate_pairwise_matrix(contacts, ignore_chain):
 
 def _output_fcc(output, values, f_buffer):
 
-    c = 0
     buf = []
     for i in values:
         buf.append(i)

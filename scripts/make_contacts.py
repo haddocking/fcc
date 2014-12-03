@@ -92,7 +92,7 @@ if __name__ == '__main__':
         filter_selection = set(options.selection.split(','))
         representative = open(args[0])
         repr_chains = dict([(j,str(i)) for i,j in enumerate(sorted(set([l[72] for l in representative if l.startswith('ATOM')])), start=1)])
-        filter_selection = map(lambda x: repr_chains.get(x), filter_selection)
+        filter_selection = map(repr_chains.get, filter_selection)
         representative.close()
         oextension = '.contacts-'+''.join(options.selection.split(','))
     else:
