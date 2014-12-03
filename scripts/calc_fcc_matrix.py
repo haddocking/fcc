@@ -57,11 +57,11 @@ def calculate_pairwise_matrix(contacts, ignore_chain):
     
     contact_lengths = []
     for c in contacts:
-      try:
-        ic = 1.0/len(c)
-      except ZeroDivisionError:
-        ic = 0
-      contact_lengths.append(ic)
+        try:
+            ic = 1.0/len(c)
+        except ZeroDivisionError:
+            ic = 0
+        contact_lengths.append(ic)
       
     if ignore_chain:
         calc_fcc = calculate_fcc_nc
