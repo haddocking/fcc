@@ -170,7 +170,7 @@ def find_false_singletons(element_pool, true_singletons):
 
     return fs_list
 
-def output_clusters(handle):
+def output_clusters(handle, clusters):
     """Outputs the cluster name, center, and members."""
 
     write = handle.write
