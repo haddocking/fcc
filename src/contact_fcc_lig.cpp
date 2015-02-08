@@ -25,6 +25,12 @@ struct Residue {
 
 vector<Residue> res;
 
+bool seg_sorter (Residue res_a, Residue res_b) {
+  int segA = res_a.seg;
+  int segB = res_b.seg;
+  return (segA < segB);
+};
+
 int main(int argc, char *argv[]) {
   char buf[2000];
 
@@ -82,6 +88,9 @@ int main(int argc, char *argv[]) {
   }
 
   if (!res.size()) {fprintf(stderr, "ERROR: PDB file %s contains no residues\n", filename); return 1;}
+
+  // Sort the residues by segment to avoid random chain ordering problems
+  sort (res.begin(), res.end(), seg_sorter);
 
   double cutoffsq = cutoff * cutoff;
 
