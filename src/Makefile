@@ -19,6 +19,9 @@ contact_fcc: contact_fcc.cpp
 contact_fcc_lig: contact_fcc_lig.cpp
 	$(CPP) $(CPFLAGS) -o contact_fcc_lig contact_fcc_lig.cpp
 
+contact_fcc_intra: contact_fcc_intra.cpp
+	$(CPP) $(CPFLAGS) -o contact_fcc_intra contact_fcc_intra.cpp
+
 clean :
 	/bin/rm $(EXEC)
 
