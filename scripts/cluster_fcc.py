@@ -13,16 +13,17 @@ Authors:
 class Element(object):
     """Defines a 'clusterable' Element"""
 
+    __slots__ = ['name', 'cluster', 'neighbors']
+
     def __init__(self, name):
         self.name = name
         self.cluster = 0
-        self.neighbors = []
+        self.neighbors = set()
 
 
     def add_neighbor(self, neighbor):
         """Adds another element to the neighbor list"""
-        nlist = self.neighbors
-        nlist.append(neighbor)
+        self.neighbors.add(neighbor)
 
     def assign_cluster(self, clust_id):
         """Assigns the Element to Cluster. 0 if unclustered"""
@@ -31,18 +32,19 @@ class Element(object):
 class Cluster(object):
     """Defines a Cluster. A Cluster is created with a name and a center (Element class)"""
 
+    __slots__ = ['name', 'center', 'members']
+
     def __init__(self, name, center):
         
         self.name = name
         self.center = center
 
         self.members = []
-        self.fs_members = []
         
         self.populate()
         
     def __len__(self):
-        return len(self.members)+len(self.fs_members)+1 # +1 Center
+        return len(self.members)+1 # +1 Center
     
     def populate(self):
         """
@@ -62,27 +64,28 @@ class Cluster(object):
             mlist.append(e)
             e.assign_cluster(name)
     
-    def add_member(self, element, fs=False):
+    def add_member(self, element):
         """
         Adds one single element to the cluster.
-        Allows signaling of fs
         """
-        if fs:
-            l = self.fs_members
-        else:
-            l = self.members
-            
+        l = self.members
         l.append(element)
         element.assign_cluster(self.name)
 
-def read_matrix(path, cutoff):
+def read_matrix(path, cutoff, strictness):
     """ 
     Reads in a four column matrix (1 2 0.123 0.456\n) 
     and creates an dictionary of Elements.
+    
+    The strictness factor is a <float> that multiplies by the cutoff 
+    to produce a new cutoff for the second half of the matrix. Used to
+    allow some variability while keeping very small interfaces from clustering
+    with anything remotely similar.
     """
 
     cutoff = float(cutoff)
-
+    partner_cutoff = float(cutoff) * float(strictness)
+    
     elements = {}
 
     f = open(path, 'r')
@@ -107,9 +110,9 @@ def read_matrix(path, cutoff):
             m = elements[mobi]    
 
         # Assign neighbors
-        if dRM > cutoff:
+        if dRM >= cutoff and dMR >= partner_cutoff:
             r.add_neighbor(m)
-        if dMR > cutoff:
+        if dMR >= cutoff and dRM >= partner_cutoff:
             m.add_neighbor(r)
 
     f.close()
@@ -122,9 +125,16 @@ def remove_true_singletons(element_pool):
     ep = element_pool
 
     ts = set([e for e in ep if not ep[e].neighbors])
+
+    # Remove ts from everybody's neighbor list
+    ts_e = set(ep[e] for e in ts)
+    for e in element_pool:
+        ep[e].neighbors = ep[e].neighbors.difference(ts_e)
+
+    # Remove ts from pool
     for e in ts:
         del ep[e]
-    
+
     return (ts, ep)
 
 def cluster_elements(element_pool, threshold):
@@ -146,7 +156,7 @@ def cluster_elements(element_pool, threshold):
         # Select Cluster Center
         # Element with largest neighbor list
         ctr_nlist, ctr = sorted([(len([se for se in ep[e].neighbors if not se.cluster]), e) for e in ce])[-1]
-        
+
         # Cluster until length of remaining elements lists are above threshold
         if ctr_nlist < threshold:
             break
@@ -158,18 +168,6 @@ def cluster_elements(element_pool, threshold):
 
     return (ep, clusters)
 
-def find_false_singletons(element_pool, true_singletons):
-    
-    ep = element_pool
-    ts = true_singletons
-    
-    unclustered = (e for e in ep if not ep[e].cluster)
-
-    # Filter True Singleton Orphans while searching
-    fs_list = [e for e in unclustered if not set([se.name for se in ep[e].neighbors]).intersection(ts)]
-
-    return fs_list
-
 def output_clusters(handle, clusters):
     """Outputs the cluster name, center, and members."""
 
@@ -177,10 +175,8 @@ def output_clusters(handle, clusters):
 
     for c in clusters:
         write( "Cluster %s -> %s " %(c.name, c.center.name) )
-        for m in c.members:
+        for m in sorted(c.members):
             write( "%s " %m.name )
-        for fs in c.fs_members:
-            write( "%s* "%fs.name)
         write("\n")
 
 if __name__ == "__main__":
@@ -199,9 +195,10 @@ if __name__ == "__main__":
     parser.add_option('-c', '--cluster-size', dest="clus_size", action="store", type="int",
                     default=4, 
                     help="Minimum number of elements in a cluster [4]")
-    parser.add_option('-f', '--include-false-singletons', dest="ifs", action="store_true", 
-                    default=False,
-                    help="Post-clustering step to include false singletons in the existing clusters.[False]")
+    parser.add_option('-s', '--strictness', dest="strictness", action="store", type='float',
+                    default=0.75,
+                    help="Multiplier for cutoff for M->R inclusion threshold. [0.75 or effective cutoff of 0.5625]")
+
 
     (options, args) = parser.parse_args()
 
@@ -222,37 +219,18 @@ if __name__ == "__main__":
     t_init = time()
 
     try:
-        pool = read_matrix(fmatrix, cutoff)
+        pool = read_matrix(fmatrix, cutoff, options.strictness)
     except IOError:
         sys.stderr.write("File not found: %s\n" %fmatrix)
         sys.exit(1)
 
     sys.stderr.write("+ Read %ix%i distance matrix in %i seconds\n" %(len(pool), len(pool), int(time()-t_init)))
     
-    ts, n_pool = remove_true_singletons(pool)
-    sys.stderr.write("+ Detected %i True Singletons\n" %len(ts))
+    # ts, pool = remove_true_singletons(pool)
+    # sys.stderr.write("+ Detected %i True Singletons\n" %len(ts))
 
     # Cluster
-    element_pool, clusters = cluster_elements(n_pool, options.clus_size)
-    
-    # Whatever elements are left in the element_pool are
-    # considered false singletons and have to be reassigned
-    # to relevant clusters
-    # Exception are elements that have 0 neighbors, which were neighbors
-    # of True Singletons and were not discarded after their signalling.
-    if options.ifs:
-        ep = element_pool
-        fs_list = find_false_singletons(ep, ts)
-        sys.stderr.write("+ Reinserting %i False Singletons\n" %len(fs_list))
-        for fs in fs_list:
-            # Check which cluster is most represented in its neighbors
-            clist = [ep[e.name].cluster for e in ep[fs].neighbors]
-            max_freq = int(sorted([(clist.count(c), c) for c in clist])[-1][1])
-            if not max_freq: # Cluster 0 == no cluster
-                continue
-            # Append FS to Cluster
-            cluster = clusters[max_freq-1]
-            cluster.add_member(ep[fs], fs=True)
+    element_pool, clusters = cluster_elements(pool, options.clus_size)
 
     # Output Clusters
     o = options.output_handle
@@ -266,7 +244,7 @@ if __name__ == "__main__":
     if isinstance(o, str):
         o_handle.close()
 
-    total_elements = len(element_pool)+len(ts)
+    total_elements = len(element_pool)
     clustered = sum([len(c) for c in clusters])
     # Calculate coverage
     clust_coverage = clustered*100/float(total_elements)
