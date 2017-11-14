@@ -57,25 +57,29 @@ int main(int argc, char *argv[]) {
   }
   int currnr = -99999;
   char currseg;
-  int segid;
-    
+  int segid = 0;
+
   set<int> nonconv;
   while (!feof(fil)) {
     char code[10];
     char atom[5];
     if (!fgets(buf, 2000, fil)) break;
     sscanf(buf, "%s %*d %s", code, atom);
-    //LINE CHANGED BY K.Visscher
+
+    // Ignore HETATM and hydrogens
     if (!strncmp(code,"ATOM", 4) && ( atom[0] != 'H' && !(  isdigit(atom[0]) && atom[1] == 'H' )  )  ) {
       int nr = atoi(buf + 22);
       char seg = buf[72];
+      if (seg != currseg) {
+        currseg = seg;
+        segid++;
+      }
       if (nr != currnr) {
           Residue r;
           r.nr = nr+10000;
-       	  segid	= seg - 64; // Use ASCII index for numerical chain ID
-    	  r.seg = segid;
-  	    res.push_back(r);
-  	    currnr = r.nr;
+    	    r.seg = segid;
+  	      res.push_back(r);
+  	      currnr = r.nr;
       }
       Residue &rcurr = res[res.size() -1];
       Coor3f ccoor;
@@ -103,7 +107,7 @@ int main(int argc, char *argv[]) {
       if (seg1 == seg2) continue;
       vector<Coor3f> &c2 = res[nn].coor;
       for (int i = 0; i < res[n].coor.size(); i++) {
-        for (int ii = 0; ii < res[nn].coor.size(); ii++) { 
+        for (int ii = 0; ii < res[nn].coor.size(); ii++) {
 	  double currdissq =
 	    (c1[i].x - c2[ii].x) * (c1[i].x - c2[ii].x) +
 	    (c1[i].y - c2[ii].y) * (c1[i].y - c2[ii].y) +
