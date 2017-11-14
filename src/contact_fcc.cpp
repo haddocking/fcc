@@ -55,28 +55,32 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "ERROR: PDB file %s does not exist\n", filename);
     return 1;
   }
+  
   int currnr = -99999;
   char currseg;
-  int segid;
-    
+  int segid = 0;
+
   set<int> nonconv;
   while (!feof(fil)) {
     char code[10];
     char atom[5];
     if (!fgets(buf, 2000, fil)) break;
     sscanf(buf, "%s %*d %s", code, atom);
-    //LINE CHANGED BY K.Visscher
-    //now test for both old and new style hydrogen
+
+    // Ignore HETATM and hydrogens
     if (!strncmp(code,"ATOM", 4) && ( atom[0] != 'H' && !(  isdigit(atom[0]) && atom[1] == 'H' )  )  ) {
       int nr = atoi(buf + 22);
       char seg = buf[72];
+      if (seg != currseg) {
+        currseg = seg;
+        segid++;
+      }
       if (nr != currnr) {
           Residue r;
           r.nr = nr+10000;
-          segid = seg - 64; // Use ASCII index for numerical chain ID
-    	  r.seg = segid;
-  	    res.push_back(r);
-  	    currnr = r.nr;
+    	    r.seg = segid;
+  	      res.push_back(r);
+  	      currnr = r.nr;
       }
       Residue &rcurr = res[res.size() -1];
       Coor3f ccoor;
