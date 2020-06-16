@@ -175,7 +175,7 @@ def output_clusters(handle, clusters):
 
     for c in clusters:
         write( "Cluster %s -> %s " %(c.name, c.center.name) )
-        for m in sorted(c.members):
+        for m in sorted(c.members, key=lambda k: k.name):
             write( "%s " %m.name )
         write("\n")
 
