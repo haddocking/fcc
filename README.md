@@ -28,7 +28,7 @@ Proteins: Structure, Function, and Bioinformatics 2012;80(7):1810–1817.
 Requirements
 ------------
 
-* Python 2.6+
+* Python 3.8+
 * C/C++ Compiler
 
 Installation
@@ -55,20 +55,20 @@ For most cases, the following setup is enough:
 
     # Generate contact files for all PDB files in pdb.list
     # using 4 cores on this machine.
-    python2.6 make_contacts.py -f pdb.list -n 4
+    python make_contacts.py -f pdb.list -n 4
 
     # Create a file listing the names of the contact files
     # Use file.list to maintain order in the cluster output
     sed -e 's/pdb/contacts/' pdb.list | sed -e '/^$/d' > pdb.contacts
 
     # Calculate the similarity matrix
-    python2.6 calc_fcc_matrix.py -f pdb.contacts -o fcc_matrix.out
+    python calc_fcc_matrix.py -f pdb.contacts -o fcc_matrix.out
 
     # Cluster the similarity matrix using a threshold of 0.75 (75% contacts in common)
-    python2.6 cluster_fcc.py fcc_matrix.out 0.75 -o clusters_0.75.out
+    python cluster_fcc.py fcc_matrix.out 0.75 -o clusters_0.75.out
 
     # Use ppretty_clusters.py to output meaningful names instead of model indexes
-    python2.6 ppretty_clusters.py clusters_0.75.out pdb.list
+    python ppretty_clusters.py clusters_0.75.out pdb.list
 
 Authors
 ------
