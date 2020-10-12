@@ -1,3 +1,7 @@
 src/contact_fcc
 src/contact_fcc_lig
 src/contact_fcc_intra
+example/pdbs/*contacts
+example/pdbs/*pdb
+example/pdbs/cluster.out
+example/pdbs/fcc.matrix
