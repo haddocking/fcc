@@ -11,28 +11,26 @@ Authors:
 import os
 import sys
 
-USAGE = "python %s <cluster_x.out> <file.nam>" %os.path.basename(sys.argv[0])
+USAGE = "python %s <cluster_x.out> <file.nam>" % os.path.basename(sys.argv[0])
+
 
 def read_clusters(path):
-    """
-    Reads clusters from a FCC output file.
-    """
-
+    """Reads clusters from a FCC output file."""
     clusters = []
     cl_file = open(path, 'r')
     for line in cl_file:
         # Cluster 8 -> 193 141 142 144 151 168 171 172 178
-        models = map(int, line.split()[3:])
+        models = list(map(int, line.split()[3:]))
         clusters.append(models)
 
     return clusters
+
 
 def read_list(path):
     """
     Reads a list containing one file per line.
     Returns an index of line number - line content
     """
-
     with open(path, 'r') as fhandle:
         fdata = {}
         for nline, line in enumerate(fhandle):
@@ -43,24 +41,27 @@ def read_list(path):
 
     return fdata
 
-def cross_data(clusters, flist):
-    """
-    Matches names in flist to the numbers in clusters.
-    """
 
-    named_clusters = []
+def cross_data(clusters, flist):
+    """Matches names in flist to the numbers in clusters."""
+    cluster_l = []
     for cl in clusters:
         ncl = [flist[s] for s in cl]
-        named_clusters.append(ncl)
+        cluster_l.append(ncl)
 
-    return named_clusters            
+    return cluster_l
+
 
 if __name__ == '__main__':
 
-    if len(sys.argv[1:]) != 2:
-        print USAGE
+    if sys.version_info[0:2] < (3, 8):
+        cur_version = "%s.%s" % sys.version_info[0:2]
+        sys.stderr.write("- Python version not supported (%s). Please use 3.8 or newer.\n" % cur_version)
         sys.exit(1)
 
+    if len(sys.argv[1:]) != 2:
+        print(USAGE)
+        sys.exit(1)
 
     cluster_file = os.path.abspath(sys.argv[1])
     pdblist_file = os.path.abspath(sys.argv[2])
@@ -68,17 +69,17 @@ if __name__ == '__main__':
     try:
         cl_list = read_clusters(cluster_file)
     except IOError:
-        sys.stderr.write('Error: file not found (%s)\nAborting..\n' %cluster_file)
+        sys.stderr.write('Error: file not found (%s)\nAborting..\n' % cluster_file)
         sys.exit(1)
 
     try:
         pdb_list = read_list(pdblist_file)
     except IOError:
-        sys.stderr.write('Error: file not found (%s)\nAborting..\n' %pdblist_file)
+        sys.stderr.write('Error: file not found (%s)\nAborting..\n' % pdblist_file)
         sys.exit(1)
 
     named_clusters = cross_data(cl_list, pdb_list)
     
     # Output
     for i, nc in enumerate(named_clusters):
-        print "Cluster %i -> %s" %(i+1, ' '.join(nc))
+        print("Cluster %i -> %s" % (i+1, ' '.join(nc)))
