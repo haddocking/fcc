@@ -70,6 +70,18 @@ For most cases, the following setup is enough:
     # Use ppretty_clusters.py to output meaningful names instead of model indexes
     python ppretty_clusters.py clusters_0.75.out pdb.list
 
+
+**IMPORTANT** In `python3` branch the order of parameters in the contact executables has changed, this might break some of your scripts
+
+```
+before:
+contact_fcc <pdb> <cutoff>
+
+now:
+contact_fcc <cutoff> <pdb>
+```
+
+* * * 
 Authors
 ------
 
@@ -88,4 +100,4 @@ Panagiotis Kastritis
 [Alexandre Bonvin] [2]
 
 [1]: http://www.ncbi.nlm.nih.gov/pubmed/22489062 "FCC @ Pubmed"
-[2]: http://nmr.chem.uu.nl/~abonvin "Alexandre Bonvin's Homepage"
+[2]: http://bonvinlab.org "Alexandre Bonvin's Homepage"
