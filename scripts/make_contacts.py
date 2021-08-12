@@ -32,7 +32,7 @@ def _calculate_contacts(contact_exec, pdbfile, d_cutoff, filter_sele=None, exten
 
     pdbname = os.path.basename(pdbfile)[:-4]
 
-    proc = Popen([contact_exec, pdbfile, d_cutoff], stdout=PIPE)
+    proc = Popen([contact_exec, d_cutoff, pdbfile], stdout=PIPE)
     p_output = proc.communicate()[0].decode('utf-8')
     contacts = sorted(list(set([line for line in p_output.split('\n')][:-1])))
 

@@ -37,16 +37,16 @@ int main(int argc, char *argv[]) {
 
   if (argc < 3) {
     fprintf(stderr,"ERROR: Too few arguments\n");
-    fprintf(stderr, "Usage: contact <pdb file> <cutoff>\n");
+    fprintf(stderr, "Usage: contact <cutoff> <pdb file>\n");
     return 1;
   }
 
-  char *filename = argv[1];
-  float cutoff = atof(argv[2]);
+  float cutoff = atof(argv[1]);
+  char *filename = argv[2];
 
   if (cutoff < 0 || cutoff > 100) {
     fprintf(stderr,"ERROR: Cutoff out of range\n");
-    fprintf(stderr, "Usage: contact <pdb file> <cutoff>\n");
+    fprintf(stderr, "Usage: contact <cutoff> <pdb file>\n");
     return 1;
   }
 
